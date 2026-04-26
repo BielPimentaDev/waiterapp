@@ -317,7 +317,7 @@ Este documento detalha os processos de QA do sistema.
 
 Abaixo estão detalhados os fluxos de teste para a gestão do carrinho:
 
-* 📄 [Caso de teste: **Adicionar** ao carrinho](docs/caso%20de%20teste%20adicionar%20item%20ao%20carrinho.pdf)
-* 📄 [Caso de teste: **Remover** item do carrinho](docs/caso%20de%20teste%20remover%20item%20do%20carrinho.pdf)
+* 📄 [Caso de teste: **Adicionar** ao carrinho](docs/caso_de_teste_add_item_carrinho.pdf)
+* 📄 [Caso de teste: **Remover** item do carrinho](docs/caso_de_teste_rem_item_carrinho.pdf)
 
 
