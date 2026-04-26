@@ -191,3 +191,7 @@ docker-compose up
 | Versao | Data | Descricao |
 |---|---|---|
 | 1.0 | 2026-04-26 | Entrega 1: testes unitarios e plano de teste |
+
+---
+
+# Partição de responsabilidades
