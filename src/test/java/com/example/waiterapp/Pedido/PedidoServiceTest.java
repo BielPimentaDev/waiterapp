@@ -1,0 +1,355 @@
+package com.example.waiterapp.Pedido;
+
+import com.example.waiterapp.Cliente.Cliente;
+import com.example.waiterapp.Cliente.ClienteService;
+import com.example.waiterapp.Item.Item;
+import com.example.waiterapp.Item.ItemService;
+import com.example.waiterapp.ItemPedido.ItemPedido;
+import com.example.waiterapp.ItemPedido.ItemPedidoRepository;
+import com.example.waiterapp.Pagamento.PagamentoRepository;
+import com.example.waiterapp.enums.Estado;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.dao.DataIntegrityViolationException;
+
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Optional;
+import java.util.Set;
+
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.*;
+
+@ExtendWith(MockitoExtension.class)
+@DisplayName("Testes unitários para PedidoService")
+class PedidoServiceTest {
+
+    @Mock private PedidoRepository pedidoRepository;
+    @Mock private PagamentoRepository pagamentoRepository;
+    @Mock private ItemPedidoRepository itemPedidoRepository;
+    @Mock private ItemService itemService;
+    @Mock private ClienteService clienteService;
+
+    @InjectMocks
+    private PedidoService pedidoService;
+
+    private Pedido pedido;
+    private Cliente cliente;
+    private Item item;
+
+    @BeforeEach
+    void setUp() {
+        cliente = new Cliente(1L, "João Silva", "joao@test.com", "12345678901", LocalDateTime.now());
+        item    = new Item(1L, "Pizza Margherita", "Pizza clássica", LocalDateTime.now(), 35.0);
+        pedido  = new Pedido(1L, LocalDateTime.now(), Estado.EM_PREPARACAO, 35.0, null, null, null);
+        pedido.setCliente(cliente);
+    }
+
+    // ======================= listaPedidos() =======================
+
+    @Test
+    @DisplayName("listaPedidos deve retornar todos os pedidos cadastrados")
+    void listaPedidos_deveRetornarTodosOsPedidos() {
+        // Arrange
+        List<Pedido> pedidos = Arrays.asList(pedido, new Pedido());
+        when(pedidoRepository.findAll()).thenReturn(pedidos);
+
+        // Act
+        List<Pedido> resultado = pedidoService.listaPedidos();
+
+        // Assert
+        assertEquals(2, resultado.size());
+        verify(pedidoRepository).findAll();
+    }
+
+    @Test
+    @DisplayName("listaPedidos deve retornar lista vazia quando não há pedidos")
+    void listaPedidos_semPedidosCadastrados_deveRetornarListaVazia() {
+        // Arrange
+        when(pedidoRepository.findAll()).thenReturn(new ArrayList<>());
+
+        // Act
+        List<Pedido> resultado = pedidoService.listaPedidos();
+
+        // Assert
+        assertTrue(resultado.isEmpty());
+    }
+
+    // ======================= listaPedidosByIdCliente() =======================
+
+    @Test
+    @DisplayName("listaPedidosByIdCliente deve retornar os pedidos do cliente informado")
+    void listaPedidosByIdCliente_clienteExistente_deveRetornarSeusPedidos() {
+        // Arrange
+        List<Pedido> pedidos = Arrays.asList(pedido);
+        when(pedidoRepository.findallByIdCliente(1L)).thenReturn(pedidos);
+
+        // Act
+        List<Pedido> resultado = pedidoService.listaPedidosByIdCliente(1L);
+
+        // Assert
+        assertEquals(1, resultado.size());
+        verify(pedidoRepository).findallByIdCliente(1L);
+    }
+
+    @Test
+    @DisplayName("listaPedidosByIdCliente deve retornar lista vazia para cliente sem pedidos")
+    void listaPedidosByIdCliente_clienteSemPedidos_deveRetornarListaVazia() {
+        // Arrange
+        when(pedidoRepository.findallByIdCliente(2L)).thenReturn(new ArrayList<>());
+
+        // Act
+        List<Pedido> resultado = pedidoService.listaPedidosByIdCliente(2L);
+
+        // Assert
+        assertTrue(resultado.isEmpty());
+    }
+
+    // ======================= retornaPedidoById() =======================
+
+    @Test
+    @DisplayName("retornaPedidoById deve retornar o pedido quando encontrado pelo id")
+    void retornaPedidoById_idExistente_deveRetornarPedido() {
+        // Arrange
+        when(pedidoRepository.findById(1L)).thenReturn(Optional.of(pedido));
+
+        // Act
+        Pedido resultado = pedidoService.retornaPedidoById(1L);
+
+        // Assert
+        assertNotNull(resultado);
+        assertEquals(1L, resultado.getId());
+    }
+
+    @Test
+    @DisplayName("retornaPedidoById deve retornar null quando o pedido não é encontrado")
+    void retornaPedidoById_idInexistente_deveRetornarNull() {
+        // Arrange
+        when(pedidoRepository.findById(99L)).thenReturn(Optional.empty());
+
+        // Act
+        Pedido resultado = pedidoService.retornaPedidoById(99L);
+
+        // Assert
+        assertNull(resultado);
+    }
+
+    // ======================= inserePedido() =======================
+
+    @Test
+    @DisplayName("inserePedido deve criar pedido com estado EM_PREPARACAO e id nulo")
+    void inserePedido_pedidoValido_deveCriarComEstadoCorretoEIdNulo() {
+        // Arrange
+        Cliente clienteRef = new Cliente();
+        clienteRef.setId(1L);
+
+        Item itemRef = new Item();
+        itemRef.setId(1L);
+
+        ItemPedido ip = new ItemPedido(null, itemRef, 2);
+        Set<ItemPedido> items = new HashSet<>();
+        items.add(ip);
+
+        Pedido novoPedido = new Pedido();
+        novoPedido.setId(5L);
+        novoPedido.setCliente(clienteRef);
+        novoPedido.setItems(items);
+
+        when(clienteService.retornaClienteById(1L)).thenReturn(cliente);
+        when(pedidoRepository.save(any(Pedido.class))).thenAnswer(inv -> inv.getArgument(0));
+        when(itemService.retornaItemById(1L)).thenReturn(item);
+        when(itemPedidoRepository.saveAll(any())).thenReturn(new ArrayList<>());
+
+        // Act
+        Pedido resultado = pedidoService.inserePedido(novoPedido);
+
+        // Assert
+        assertNull(resultado.getId());
+        assertEquals(Estado.EM_PREPARACAO, resultado.getEstado());
+        assertNotNull(resultado.getDataCriacao());
+        assertEquals(cliente, resultado.getCliente());
+    }
+
+    @Test
+    @DisplayName("inserePedido deve calcular o preço total a partir dos itens do pedido")
+    void inserePedido_comUmItem_deveCalcularPrecoTotalCorretamente() {
+        // Arrange – item custa 35.0, quantidade 2 → total esperado 70.0
+        Cliente clienteRef = new Cliente();
+        clienteRef.setId(1L);
+
+        Item itemRef = new Item();
+        itemRef.setId(1L);
+
+        ItemPedido ip = new ItemPedido(null, itemRef, 2);
+        Set<ItemPedido> items = new HashSet<>();
+        items.add(ip);
+
+        Pedido novoPedido = new Pedido();
+        novoPedido.setCliente(clienteRef);
+        novoPedido.setItems(items);
+
+        when(clienteService.retornaClienteById(1L)).thenReturn(cliente);
+        when(pedidoRepository.save(any(Pedido.class))).thenAnswer(inv -> inv.getArgument(0));
+        when(itemService.retornaItemById(1L)).thenReturn(item);
+        when(itemPedidoRepository.saveAll(any())).thenReturn(new ArrayList<>());
+
+        // Act
+        Pedido resultado = pedidoService.inserePedido(novoPedido);
+
+        // Assert
+        assertEquals(70.0, resultado.getPrecoTotal(), 0.001);
+    }
+
+    @Test
+    @DisplayName("inserePedido sem itens deve ter preço total zero")
+    void inserePedido_semItens_deveDefinirPrecoTotalComoZero() {
+        // Arrange
+        Cliente clienteRef = new Cliente();
+        clienteRef.setId(1L);
+
+        Pedido novoPedido = new Pedido();
+        novoPedido.setCliente(clienteRef);
+        novoPedido.setItems(new HashSet<>());
+
+        when(clienteService.retornaClienteById(1L)).thenReturn(cliente);
+        when(pedidoRepository.save(any(Pedido.class))).thenAnswer(inv -> inv.getArgument(0));
+        when(itemPedidoRepository.saveAll(any())).thenReturn(new ArrayList<>());
+
+        // Act
+        Pedido resultado = pedidoService.inserePedido(novoPedido);
+
+        // Assert
+        assertEquals(0.0, resultado.getPrecoTotal(), 0.001);
+    }
+
+    @Test
+    @DisplayName("inserePedido deve salvar o pedido no repositório exatamente duas vezes")
+    void inserePedido_deveInvocarSaveNoRepositorioDuasVezes() {
+        // Arrange
+        Cliente clienteRef = new Cliente();
+        clienteRef.setId(1L);
+
+        Pedido novoPedido = new Pedido();
+        novoPedido.setCliente(clienteRef);
+        novoPedido.setItems(new HashSet<>());
+
+        when(clienteService.retornaClienteById(1L)).thenReturn(cliente);
+        when(pedidoRepository.save(any(Pedido.class))).thenAnswer(inv -> inv.getArgument(0));
+        when(itemPedidoRepository.saveAll(any())).thenReturn(new ArrayList<>());
+
+        // Act
+        pedidoService.inserePedido(novoPedido);
+
+        // Assert
+        verify(pedidoRepository, times(2)).save(any(Pedido.class));
+    }
+
+    @Test
+    @DisplayName("inserePedido deve buscar o item pelo id para cada ItemPedido")
+    void inserePedido_comItem_deveBuscarItemPeloId() {
+        // Arrange
+        Cliente clienteRef = new Cliente();
+        clienteRef.setId(1L);
+
+        Item itemRef = new Item();
+        itemRef.setId(1L);
+
+        ItemPedido ip = new ItemPedido(null, itemRef, 1);
+        Set<ItemPedido> items = new HashSet<>();
+        items.add(ip);
+
+        Pedido novoPedido = new Pedido();
+        novoPedido.setCliente(clienteRef);
+        novoPedido.setItems(items);
+
+        when(clienteService.retornaClienteById(1L)).thenReturn(cliente);
+        when(pedidoRepository.save(any(Pedido.class))).thenAnswer(inv -> inv.getArgument(0));
+        when(itemService.retornaItemById(1L)).thenReturn(item);
+        when(itemPedidoRepository.saveAll(any())).thenReturn(new ArrayList<>());
+
+        // Act
+        pedidoService.inserePedido(novoPedido);
+
+        // Assert
+        verify(itemService).retornaItemById(1L);
+    }
+
+    @Test
+    @DisplayName("inserePedido deve associar o cliente correto ao pedido")
+    void inserePedido_deveAssociarClienteAoPedido() {
+        // Arrange
+        Cliente clienteRef = new Cliente();
+        clienteRef.setId(1L);
+
+        Pedido novoPedido = new Pedido();
+        novoPedido.setCliente(clienteRef);
+        novoPedido.setItems(new HashSet<>());
+
+        when(clienteService.retornaClienteById(1L)).thenReturn(cliente);
+        when(pedidoRepository.save(any(Pedido.class))).thenAnswer(inv -> inv.getArgument(0));
+        when(itemPedidoRepository.saveAll(any())).thenReturn(new ArrayList<>());
+
+        // Act
+        Pedido resultado = pedidoService.inserePedido(novoPedido);
+
+        // Assert
+        assertEquals(cliente, resultado.getCliente());
+        verify(clienteService).retornaClienteById(1L);
+    }
+
+    // ======================= atualizaPedido() =======================
+
+    @Test
+    @DisplayName("atualizaPedido deve salvar e retornar o pedido atualizado")
+    void atualizaPedido_pedidoExistente_deveSalvarERetornarPedidoAtualizado() {
+        // Arrange
+        when(pedidoRepository.findById(1L)).thenReturn(Optional.of(pedido));
+        when(pedidoRepository.save(pedido)).thenReturn(pedido);
+
+        // Act
+        Pedido resultado = pedidoService.atualizaPedido(pedido);
+
+        // Assert
+        assertNotNull(resultado);
+        verify(pedidoRepository).save(pedido);
+    }
+
+    // ======================= apagaPedido() =======================
+
+    @Test
+    @DisplayName("apagaPedido deve excluir o pedido sem lançar exceção")
+    void apagaPedido_pedidoExistente_deveExcluirSemExcecao() {
+        // Arrange
+        when(pedidoRepository.findById(1L)).thenReturn(Optional.of(pedido));
+        doNothing().when(pedidoRepository).deleteById(1L);
+
+        // Act & Assert
+        assertDoesNotThrow(() -> pedidoService.apagaPedido(1L));
+        verify(pedidoRepository).deleteById(1L);
+    }
+
+    @Test
+    @DisplayName("apagaPedido deve lançar DataIntegrityViolationException quando há violação referencial")
+    void apagaPedido_comViolacaoReferencial_deveLancarDataIntegrityViolationException() {
+        // Arrange
+        when(pedidoRepository.findById(1L)).thenReturn(Optional.of(pedido));
+        doThrow(new DataIntegrityViolationException("FK violation"))
+            .when(pedidoRepository).deleteById(1L);
+
+        // Act & Assert
+        DataIntegrityViolationException ex = assertThrows(
+            DataIntegrityViolationException.class,
+            () -> pedidoService.apagaPedido(1L)
+        );
+        assertTrue(ex.getMessage().contains("Não é possível excluir esse pedido"));
+    }
+}

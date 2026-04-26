@@ -1,4 +1,19 @@
+# Normaliza texto e grava como LF no repositório
 * text=auto
-*.sh text eol=lf
+
+# Força LF no checkout para arquivos de texto comuns do projeto
+*.md  text eol=lf
+*.java text eol=lf
+*.xml  text eol=lf
+*.properties text eol=lf
+*.yml  text eol=lf
+*.yaml text eol=lf
+*.json text eol=lf
+*.sql  text eol=lf
 Dockerfile text eol=lf
-*.yml text eol=lf
+*.sh   text eol=lf
+
+# Scripts Windows: mantém CRLF (se você tiver/usar)
+*.bat text eol=crlf
+*.cmd text eol=crlf
+mvnw.cmd text eol=crlf
