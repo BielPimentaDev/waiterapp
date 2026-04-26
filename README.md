@@ -182,6 +182,10 @@ docker-compose up
 
 ---
 
+
+# Simulação de Combate
+[`Fork do repositório`](https://github.com/BielPimentaDev/Trabalho-POO-Simula-o-de-combate)
+
 ## Historico
 
 | Versao | Data | Descricao |
