@@ -1,5 +1,0 @@
-Falta de docker
-Readme incompleto
-Falta de testes unitários
-Falta de documentação
-Falta de tratamento de erros e logs claros
