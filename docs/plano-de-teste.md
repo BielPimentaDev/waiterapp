@@ -302,3 +302,21 @@ mvn test jacoco:report
 |---|---|---|---|
 | Elaborado por | Grupo | 2026-04-26 | — |
 | Revisado por | — | — | — |
+
+---
+
+# Testes Manuais - WaiterApp
+
+Este documento detalha os processos de QA do sistema.
+
+* 📄 **Documento Completo:** [Acesse os Testes Manuais aqui](https://docs.google.com/document/d/1kNf6tNtkxJ-7kMwsXe0t5jLLEZdVhzWCr9jAtzic4jI/edit?usp=sharing)
+
+---
+
+# Testlink
+
+Abaixo estão detalhados os fluxos de teste para a gestão do carrinho:
+
+* 📄 [Caso de teste: **Adicionar** ao carrinho](https://github.com/user-attachments/files/27106620/caso.de.teste.adicionar.item.ao.carrinho.pdf)
+* 📄 [Caso de teste: **Remover** item do carrinho](https://github.com/user-attachments/files/27106630/caso.de.teste.remover.item.do.carrinho.pdf)
+
