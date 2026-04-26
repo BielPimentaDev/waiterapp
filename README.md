@@ -194,4 +194,13 @@ docker-compose up
 
 ---
 
-# Partição de responsabilidades
+# 👥 Partição de Responsabilidades
+
+
+| Integrante | Responsabilidade | Status |
+| :--- | :--- | :---: |
+| **Gabriel Pimenta** |  | ✅ |
+| **Guilherme Coelho** | Teste Manuais WaiterApp, Casos de teste Testlink, documentação Plano de teste | ✅ |
+| **Kauan Christofaro** |  | ✅ |
+| **Rafael Langsch** |  | ✅ |
+
