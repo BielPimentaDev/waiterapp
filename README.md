@@ -4,6 +4,12 @@
 
 ---
 
+## Projeto relacionado
+
+Este repositorio contem a documentacao e os testes do **WaiterApp**. O **segundo software** avaliado no trabalho possui um README proprio e esta disponivel no repositorio:
+
+- https://github.com/BielPimentaDev/Trabalho-POO-Simula-o-de-combate
+
 ## Descricao do Sistema
 
 O **WaiterApp** e uma API REST de gerenciamento de pedidos para restaurantes. O sistema permite que garcons registrem e acompanhem pedidos de clientes, consultem o cardapio, gerenciem itens e processem pagamentos.
@@ -105,6 +111,49 @@ mvn test
 | `CardapioServiceTest.java` | `CardapioService` | 16 | [`src/test/.../Cardapio/CardapioServiceTest.java`](src/test/java/com/example/waiterapp/Cardapio/CardapioServiceTest.java) |
 
 **Total: ~119 testes unitarios**
+
+### 3.1 Cobertura de Testes (JaCoCo)
+
+Resultados de cobertura observados no relatorio do JaCoCo (pacote/agrupamento geral `com.example.waiterapp`):
+
+| Grupo | Classes | Metodos | Linhas | Branches (decisoes) |
+|---|---:|---:|---:|---:|
+| `com.example.waiterapp` | **93%** (31/33) | **69%** (206/297) | **68%** (423/616) | **22%** (13/58) |
+
+**Analise:**
+
+- **Boa cobertura estrutural (classes):** 93% sugere que quase todos os modulos principais foram ao menos carregados/exercitados pelos testes.
+- **Cobertura moderada de metodos/linhas:** 69%/68% indica que ainda existem fluxos internos nao executados (validacoes, excecoes, caminhos alternativos e limites).
+- **Branches baixos (22%):** o principal ponto de melhoria. Normalmente significa que muitos `if/else` (ou condicoes de negocio) foram testados apenas em um lado da decisao (ex.: so caminho valido, faltando o invalido).
+
+**Acoes recomendadas para aumentar branches:**
+
+- Criar testes especificamente para cobrir ambos os lados de cada condicao (valores invalidos, listas vazias, IDs inexistentes, estados nao permitidos).
+- Priorizar metodos com mais validacoes/condicionais (servicos e regras de transicao de estado), pois costumam concentrar branches.
+
+**Como visualizar o relatorio (HTML):**
+
+- Gere o relatorio de cobertura (ex.: `mvn clean test` + `mvn jacoco:report`, dependendo da configuracao do `pom.xml`).
+- Abra o arquivo: `target/site/jacoco/index.html`
+
+### 3.2 Sugestao: exigir cobertura minima (80%) via CI/CD
+
+Para evitar regressao na qualidade dos testes (e incentivar a cobertura de branches/linhas ao longo do tempo), uma boa pratica e configurar o pipeline de CI/CD para **falhar o build** quando a cobertura ficar abaixo de um limite minimo.
+
+**Sugestao de politica (exemplo):**
+
+| Metrica | Limite minimo sugerido |
+|---|---:|
+| Linhas (line coverage) | 80% |
+| Branches (branch coverage) | 80% |
+
+**Como implementar (alto nivel):**
+
+- Adicionar o **JaCoCo** no `pom.xml` com a meta `check`, definindo os limites desejados.
+- No CI (ex.: GitHub Actions/GitLab CI), executar `mvn clean verify`.
+- Se a cobertura ficar abaixo do limite, o job falha e a PR nao pode ser mesclada ate corrigir ou justificar.
+
+> Observacao: como a metrica de *branches* costuma ser a mais dificil, um plano realista pode ser adotar 80% primeiro para **linhas** e aumentar gradualmente o limite de **branches** (por exemplo: 40% → 60% → 80%) a cada iteracao.
 
 **Cobertura de cenarios em cada classe:**
 
