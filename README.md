@@ -199,7 +199,7 @@ docker-compose up
 
 | Integrante | Responsabilidade | Status |
 | :--- | :--- | :---: |
-| **Gabriel Pimenta** |  | ✅ |
+| **Gabriel Pimenta** | Testes unitários, Documentação plano de testes, Reporte de issues, Documentação do projeto  | ✅ |
 | **Guilherme Coelho** | Teste Manuais WaiterApp, Casos de teste Testlink, documentação Plano de teste | ✅ |
 | **Kauan Christofaro** |  | ✅ |
 | **Rafael Langsch** |  | ✅ |
