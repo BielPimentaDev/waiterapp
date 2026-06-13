@@ -277,10 +277,13 @@ class PedidoServiceTest {
         when(itemPedidoRepository.saveAll(any())).thenReturn(new ArrayList<>());
 
         // Act
-        pedidoService.inserePedido(novoPedido);
+        Pedido resultado = pedidoService.inserePedido(novoPedido);
 
         // Assert
         verify(itemService).retornaItemById(1L);
+        ItemPedido itemPedidoSalvo = resultado.getItems().iterator().next();
+        assertEquals(item.getPreco(), itemPedidoSalvo.getPreco());
+        assertSame(resultado, itemPedidoSalvo.getPedido());
     }
 
     @Test
@@ -302,7 +305,7 @@ class PedidoServiceTest {
         Pedido resultado = pedidoService.inserePedido(novoPedido);
 
         // Assert
-        assertEquals(cliente, resultado.getCliente());
+        assertSame(cliente, resultado.getCliente());
         verify(clienteService).retornaClienteById(1L);
     }
 

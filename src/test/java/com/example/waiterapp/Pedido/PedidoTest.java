@@ -1,7 +1,10 @@
 package com.example.waiterapp.Pedido;
 
+import com.example.waiterapp.Garcom.Garcom;
 import com.example.waiterapp.Item.Item;
 import com.example.waiterapp.ItemPedido.ItemPedido;
+import com.example.waiterapp.Pagamento.Pagamento;
+import com.example.waiterapp.Pagamento.PagamentoComCartao.PagamentoComCartao;
 import com.example.waiterapp.enums.Estado;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -167,6 +170,40 @@ class PedidoTest {
         assertEquals(tamanhoAntes, pedido.getItems().size());
     }
 
+    // ======================= getters/setters de associações =======================
+
+    @Test
+    @DisplayName("getGarcom deve retornar o garçom associado ao pedido")
+    void getGarcom_garcomAssociado_deveRetornarGarcom() {
+        // Arrange
+        Garcom garcom = new Garcom(1L, "João", LocalDateTime.now(), "12345678901");
+
+        // Act
+        pedido.setGarcom(garcom);
+
+        // Assert
+        assertSame(garcom, pedido.getGarcom());
+    }
+
+    @Test
+    @DisplayName("getPagamento deve retornar o pagamento associado ao pedido")
+    void getPagamento_pagamentoAssociado_deveRetornarPagamento() {
+        // Arrange
+        Pagamento pagamento = new PagamentoComCartao(1L, Estado.CONCLUIDO, LocalDateTime.now());
+
+        // Act
+        pedido.setPagamento(pagamento);
+
+        // Assert
+        assertSame(pagamento, pedido.getPagamento());
+    }
+
+    @Test
+    @DisplayName("chamarGarcom não deve lançar exceção")
+    void chamarGarcom_naoDeveLancarExcecao() {
+        assertDoesNotThrow(() -> pedido.chamarGarcom());
+    }
+
     // ======================= equals() e hashCode() =======================
 
     @Test
@@ -193,6 +230,12 @@ class PedidoTest {
     @DisplayName("equals deve retornar false quando comparado com null")
     void equals_comparadoComNull_deveRetornarFalse() {
         assertNotEquals(null, pedido);
+    }
+
+    @Test
+    @DisplayName("equals deve retornar false quando comparado com objeto de outra classe")
+    void equals_comparadoComOutraClasse_deveRetornarFalse() {
+        assertNotEquals(pedido, "não é um pedido");
     }
 
     @Test
