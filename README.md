@@ -52,9 +52,17 @@ Os modulos selecionados para teste sao os que contem logica de negocio nao trivi
 
 O plano contem: escopo, abordagem, tecnicas, ferramentas, casos de teste por classe, criterios de entrada/saida e bugs documentados.
 
+### 2. Medidas de Qualidade (ISO/IEC 25010)
+
+| Artefato | Link |
+|---|---|
+| Medidas de Qualidade — ISO/IEC 25010 (Markdown) | [`docs/medidas-iso-25010.md`](docs/medidas-iso-25010.md) |
+
+O documento define as metas de qualidade dos atributos da norma ISO/IEC 25010 para o WaiterApp, com escala de prioridade, medidas esperadas e justificativas por subcaracteristica (funcionalidade, desempenho, usabilidade da interface web, seguranca, entre outras).
+
 ---
 
-### 2. Codigo-Fonte Original
+### 3. Codigo-Fonte Original
 
 | Modulo | Link |
 |---|---|
@@ -72,7 +80,7 @@ O plano contem: escopo, abordagem, tecnicas, ferramentas, casos de teste por cla
 
 ---
 
-### 3. Testes Unitarios Automatizados
+### 4. Testes Unitarios Automatizados
 
 **Ferramentas utilizadas nos testes:**
 
@@ -123,7 +131,7 @@ mvn test
 
 ---
 
-### 4. Configuracao de Teste
+### 5. Configuracao de Teste
 
 | Arquivo | Link | Descricao |
 |---|---|---|
@@ -137,7 +145,8 @@ mvn test
 ```
 waiterapp/
 ├── docs/
-│   └── plano-de-teste.md              # Plano de Teste (Entrega 1)
+│   ├── plano-de-teste.md              # Plano de Teste (Entrega 1)
+│   └── medidas-iso-25010.md         # Medidas de Qualidade ISO/IEC 25010
 ├── src/
 │   ├── main/java/com/example/waiterapp/
 │   │   ├── Cardapio/                  # Cardapio (entidade, servico, repositorio, DTO)
@@ -191,6 +200,7 @@ docker-compose up
 | Versao | Data | Descricao |
 |---|---|---|
 | 1.0 | 2026-04-26 | Entrega 1: testes unitarios e plano de teste |
+| 1.1 | 2026-06-12 | Medidas de qualidade ISO/IEC 25010 |
 
 ---
 
@@ -201,6 +211,6 @@ docker-compose up
 | :--- | :--- | :---: |
 | **Gabriel Pimenta** | Testes unitários, Documentação plano de testes, Reporte de issues, Documentação do projeto  | ✅ |
 | **Guilherme Coelho** | Teste Manuais WaiterApp, Casos de teste Testlink, documentação Plano de teste | ✅ |
-| **Kauan Christofaro** |  | ✅ |
+| **Kauan Christofaro** | Teste Manuais Simulador de combate, documentação Plano de teste, Indicação das medidas da ISO 25010 | ✅ |
 | **Rafael Langsch** |  | ✅ |
 
