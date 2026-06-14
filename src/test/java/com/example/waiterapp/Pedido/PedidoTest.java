@@ -196,6 +196,12 @@ class PedidoTest {
     }
 
     @Test
+    @DisplayName("equals deve retornar false quando comparado com objeto de classe diferente")
+    void equals_classesDiferentes_deveRetornarFalse() {
+        assertNotEquals(pedido, "uma string qualquer");
+    }
+
+    @Test
     @DisplayName("equals deve retornar true quando comparado com o próprio objeto")
     void equals_mesmoObjeto_deveRetornarTrue() {
         assertEquals(pedido, pedido);

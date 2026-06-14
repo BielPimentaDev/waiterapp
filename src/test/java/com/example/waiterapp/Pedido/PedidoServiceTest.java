@@ -301,9 +301,72 @@ class PedidoServiceTest {
         // Act
         Pedido resultado = pedidoService.inserePedido(novoPedido);
 
-        // Assert
+        // Assert — verifica o objeto COMPLETO (não apenas id), matando o mutante setCliente
         assertEquals(cliente, resultado.getCliente());
+        assertEquals("João Silva", resultado.getCliente().getNome());
         verify(clienteService).retornaClienteById(1L);
+    }
+
+    @Test
+    @DisplayName("inserePedido deve associar o pedido correto em cada ItemPedido")
+    void inserePedido_comItem_deveAssociarPedidoAoItemPedido() {
+        // Arrange
+        Cliente clienteRef = new Cliente();
+        clienteRef.setId(1L);
+
+        Item itemRef = new Item();
+        itemRef.setId(1L);
+
+        ItemPedido ip = new ItemPedido(null, itemRef, 1);
+        Set<ItemPedido> items = new HashSet<>();
+        items.add(ip);
+
+        Pedido novoPedido = new Pedido();
+        novoPedido.setCliente(clienteRef);
+        novoPedido.setItems(items);
+
+        when(clienteService.retornaClienteById(1L)).thenReturn(cliente);
+        when(pedidoRepository.save(any(Pedido.class))).thenAnswer(inv -> inv.getArgument(0));
+        when(itemService.retornaItemById(1L)).thenReturn(item);
+        when(itemPedidoRepository.saveAll(any())).thenReturn(new ArrayList<>());
+
+        // Act
+        Pedido resultado = pedidoService.inserePedido(novoPedido);
+
+        // Assert — ip.setPedido(pedido) deve ter sido chamado; verifica via getPedido()
+        ItemPedido ipResultado = resultado.getItems().iterator().next();
+        assertNotNull(ipResultado.getPedido(), "ItemPedido deve ter o pedido associado após inserção");
+    }
+
+    @Test
+    @DisplayName("inserePedido deve registrar o preço no ItemPedido")
+    void inserePedido_comItem_deveSetarPrecoNoItemPedido() {
+        // Arrange
+        Cliente clienteRef = new Cliente();
+        clienteRef.setId(1L);
+
+        Item itemRef = new Item();
+        itemRef.setId(1L);
+
+        ItemPedido ip = new ItemPedido(null, itemRef, 1);
+        Set<ItemPedido> items = new HashSet<>();
+        items.add(ip);
+
+        Pedido novoPedido = new Pedido();
+        novoPedido.setCliente(clienteRef);
+        novoPedido.setItems(items);
+
+        when(clienteService.retornaClienteById(1L)).thenReturn(cliente);
+        when(pedidoRepository.save(any(Pedido.class))).thenAnswer(inv -> inv.getArgument(0));
+        when(itemService.retornaItemById(1L)).thenReturn(item);
+        when(itemPedidoRepository.saveAll(any())).thenReturn(new ArrayList<>());
+
+        // Act
+        pedidoService.inserePedido(novoPedido);
+
+        // Assert — ip.setPreco() deve ter sido chamado com o preço do item (35.0)
+        assertEquals(35.0, ip.getPreco(), 0.001,
+                "ItemPedido deve registrar o preço do item para persistência");
     }
 
     // ======================= atualizaPedido() =======================

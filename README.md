@@ -231,8 +231,165 @@ docker-compose up
 
 ---
 
+---
+
+## Artefatos da Entrega 2 (17/06/2026)
+
+### 5. Testes Unitarios Melhorados
+
+Novos testes adicionados cobrindo a hierarquia de Pagamento e branches antes descobertos:
+
+| Arquivo | Classe Testada | Testes | Link |
+|---|---|---|---|
+| `PagamentoTest.java` | `Pagamento`, `PagamentoComCartao`, `PagamentoComDinheiro` | 22 | [`src/test/.../Pagamento/PagamentoTest.java`](src/test/java/com/example/waiterapp/Pagamento/PagamentoTest.java) |
+| `PedidoTest.java` | `Pedido` | 16 | [`src/test/.../Pedido/PedidoTest.java`](src/test/java/com/example/waiterapp/Pedido/PedidoTest.java) |
+| `PedidoServiceTest.java` | `PedidoService` | 17 | [`src/test/.../Pedido/PedidoServiceTest.java`](src/test/java/com/example/waiterapp/Pedido/PedidoServiceTest.java) |
+| `ItemServiceTest.java` | `ItemService` | 17 | [`src/test/.../Item/ItemServiceTest.java`](src/test/java/com/example/waiterapp/Item/ItemServiceTest.java) |
+
+**Total acumulado: ~183 testes unitarios**
+
+---
+
+### 6. Testes de Integracao
+
+Testes com Spring Boot + H2 em memoria, testando a camada Controller → Service → Repository real:
+
+| Arquivo | Modulo Testado | Testes | Link |
+|---|---|---|---|
+| `ClienteIntegrationTest.java` | Cliente (CRUD + busca por CPF) | 7 | [`src/test/.../integration/ClienteIntegrationTest.java`](src/test/java/com/example/waiterapp/integration/ClienteIntegrationTest.java) |
+| `CardapioIntegrationTest.java` | Cardapio (CRUD + 404) | 7 | [`src/test/.../integration/CardapioIntegrationTest.java`](src/test/java/com/example/waiterapp/integration/CardapioIntegrationTest.java) |
+
+**Como executar (excluindo E2E):**
+
+```bash
+mvn test -Dgroups='!e2e'
+```
+
+---
+
+### 7. Testes de Sistema / E2E (Selenium)
+
+Testes de ponta a ponta com Selenium 4 + WebDriverManager. Requerem a aplicacao rodando em `localhost:8080`.
+
+| Arquivo | Cenarios | Link |
+|---|---|---|
+| `PedidoE2ETest.java` | Carregamento da app, API de pedidos, tempo de resposta | [`src/test/.../e2e/PedidoE2ETest.java`](src/test/java/com/example/waiterapp/e2e/PedidoE2ETest.java) |
+| `ClienteE2ETest.java` | API de clientes, elementos Angular, performance | [`src/test/.../e2e/ClienteE2ETest.java`](src/test/java/com/example/waiterapp/e2e/ClienteE2ETest.java) |
+| `CardapioE2ETest.java` | API de cardapios, 404, itens | [`src/test/.../e2e/CardapioE2ETest.java`](src/test/java/com/example/waiterapp/e2e/CardapioE2ETest.java) |
+| `GarcomE2ETest.java` | API de garcons, Swagger UI, performance | [`src/test/.../e2e/GarcomE2ETest.java`](src/test/java/com/example/waiterapp/e2e/GarcomE2ETest.java) |
+
+**Como executar os testes E2E:**
+
+```bash
+# 1. Subir a aplicacao
+docker-compose up -d
+
+# 2. Executar apenas os testes E2E
+mvn test -Dgroups=e2e
+```
+
+---
+
+### 8. Cobertura Estrutural (JaCoCo — Tecnica Todas-Arestas)
+
+Resultados apos melhorias da Entrega 2 nas classes de maior complexidade:
+
+| Classe | Branches cobertos | % Branches | Status |
+|---|---|---|---|
+| `PedidoService` | 4/4 | **100%** | ✅ |
+| `Pedido` | 5/6 | **83.3%** | ✅ |
+| `Pagamento` | 5/6 | **83.3%** | ✅ |
+| `ItemService` | sem branches | **100% linhas** | ✅ |
+
+**Como gerar o relatorio:**
+
+```bash
+mvn test jacoco:report -Dgroups='!e2e'
+# Abrir: target/site/jacoco/index.html
+```
+
+---
+
+### 9. Teste de Mutacao (PITest)
+
+Ferramenta: **PITest 1.15.3** com plugin JUnit 5.
+
+| Metrica | Valor |
+|---|---|
+| Mutantes gerados | 62 |
+| Mutantes mortos | 59 (95%) |
+| Test Strength | **100%** |
+
+**Como executar:**
+
+```bash
+mvn pitest:mutationCoverage
+# Relatorio em: target/pit-reports/index.html
+```
+
+---
+
+### 10. Inspecao de Codigo (SonarCloud)
+
+> Configurar em: [sonarcloud.io](https://sonarcloud.io) — conectar ao repositorio GitHub do grupo.
+
+**Como executar a analise localmente:**
+
+```bash
+mvn sonar:sonar \
+  -Dsonar.projectKey=SEU_PROJECT_KEY \
+  -Dsonar.organization=SEU_ORG \
+  -Dsonar.host.url=https://sonarcloud.io \
+  -Dsonar.login=SEU_TOKEN
+```
+
+> Prints da analise e das correcoes por membro devem ser adicionados aqui apos execucao.
+
+---
+
+### 11. ISO 25010 — Atributos de Qualidade
+
+> Documento com medidas e justificativas para cada atributo da ISO 25010:
+>
+> **[Link Google Docs — adicionar apos criacao do documento]**
+
+---
+
+## Estrutura do Repositorio (Entrega 2)
+
+```
+waiterapp/
+├── docs/
+│   └── plano-de-teste.md
+├── src/
+│   ├── main/java/com/example/waiterapp/      # Codigo de producao
+│   └── test/java/com/example/waiterapp/
+│       ├── Cardapio/CardapioServiceTest.java
+│       ├── Cliente/ClienteServiceTest.java
+│       ├── Garcom/GarcomServiceTest.java
+│       ├── Item/ItemServiceTest.java
+│       ├── Item/Prato/PratoTest.java
+│       ├── ItemPedido/ItemPedidoTest.java
+│       ├── Pagamento/PagamentoTest.java       # NOVO
+│       ├── Pedido/PedidoTest.java
+│       ├── Pedido/PedidoServiceTest.java
+│       ├── integration/                       # NOVO — testes de integracao
+│       │   ├── ClienteIntegrationTest.java
+│       │   └── CardapioIntegrationTest.java
+│       └── e2e/                               # NOVO — testes Selenium E2E
+│           ├── BaseSeleniumTest.java
+│           ├── PedidoE2ETest.java
+│           ├── ClienteE2ETest.java
+│           ├── CardapioE2ETest.java
+│           └── GarcomE2ETest.java
+└── pom.xml                                    # JaCoCo + PITest + Selenium configurados
+```
+
+---
+
 ## Historico
 
 | Versao | Data | Descricao |
 |---|---|---|
 | 1.0 | 2026-04-26 | Entrega 1: testes unitarios e plano de teste |
+| 2.0 | 2026-06-17 | Entrega 2: integracao, E2E, mutacao, cobertura estrutural |
