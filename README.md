@@ -358,7 +358,7 @@ mvn sonar:sonar \
 
 > Documento com medidas e justificativas para cada atributo da ISO 25010:
 >
-> Arquivo Medidas ISO 25010 | [`docs\medidas-iso-25010.md`](docs\medidas-iso-25010.md)
+| Medidas de Qualidade — ISO/IEC 25010 | [`docs/medidas-iso-25010.md`](docs/medidas-iso-25010.md) |
 
 ---
 
