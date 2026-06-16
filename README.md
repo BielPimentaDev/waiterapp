@@ -429,6 +429,6 @@ waiterapp/
 | Integrante | Responsabilidade | Status |
 | :--- | :--- | :---: |
 | **Gabriel Pimenta** | Testes unitários, Documentação plano de testes, Reporte de issues, Documentação do projeto  | ✅ |
-| **Guilherme Coelho** | Teste Manuais WaiterApp, Casos de teste Testlink, documentação Plano de teste | ✅ |
+| **Guilherme Coelho** | Teste Manuais WaiterApp, Testes E2E com Selenium, Casos de teste Testlink, documentação Plano de teste | ✅ |
 | **Kauan Christofaro** | Teste Manuais Simulador de combate, documentação Plano de teste, Indicação das medidas da ISO 25010 | ✅ |
 | **Rafael Langsch** |  | ✅ |
