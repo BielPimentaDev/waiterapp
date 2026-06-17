@@ -34,7 +34,7 @@ jobs:
         run: chmod +x mvnw
 
       - name: Run unit and integration tests
-        run: ./mvnw clean verify "-DexcludedGroups=e2e"
+        run: ./mvnw clean verify
 
   sonar:
     name: Unit, Integration & SonarCloud
@@ -72,5 +72,4 @@ jobs:
             "-Dsonar.organization=bielpimentadev" \
             "-Dsonar.host.url=https://sonarcloud.io" \
             "-Dsonar.coverage.jacoco.xmlReportPaths=target/site/jacoco/jacoco.xml" \
-            "-Dmaven.test.failure.ignore=true" \
-            "-DexcludedGroups=e2e"
+            "-Dmaven.test.failure.ignore=true"
