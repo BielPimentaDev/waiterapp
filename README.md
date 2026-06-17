@@ -4,6 +4,12 @@
 
 ---
 
+## Projeto relacionado
+
+Este repositorio contem a documentacao e os testes do **WaiterApp**. O **segundo software** avaliado no trabalho possui um README proprio e esta disponivel no repositorio:
+
+- https://github.com/BielPimentaDev/Trabalho-POO-Simula-o-de-combate
+
 ## Descricao do Sistema
 
 O **WaiterApp** e uma API REST de gerenciamento de pedidos para restaurantes. O sistema permite que garcons registrem e acompanhem pedidos de clientes, consultem o cardapio, gerenciem itens e processem pagamentos.
@@ -114,6 +120,57 @@ mvn test
 
 **Total: ~126 testes unitarios**
 
+### 3.1 Cobertura de Testes (JaCoCo)
+
+Resultados de cobertura do JaCoCo apos a Entrega 2 (testes unitarios + integracao; E2E excluidos por requererem Chrome):
+
+| Grupo | Classes | Metodos | Linhas | Branches (decisoes) |
+|---|---:|---:|---:|---:|
+| `com.example.waiterapp` | **97%** (32/33) | **79%** (239/302) | **78.6%** (609/775) | **38.3%** (23/60) |
+
+**Cobertura de branches por classe (classes com logica nao-trivial):**
+
+| Classe | Branches cobertos | % Branches | Status |
+|---|---|---|---|
+| `PedidoService` | 4/4 | **100%** | ✅ |
+| `Pedido` | 5/6 | **83.3%** | ✅ |
+| `Pagamento` | 5/6 | **83.3%** | ✅ |
+| `ClienteController` | 3/4 | **75%** | ⚠️ |
+| `Ingrediente` | 3/6 | **50%** | ⚠️ |
+| `Item` | 1/6 | **16.7%** | ❌ |
+| `Cardapio` | 1/6 | **16.7%** | ❌ |
+| `Cliente` | 1/6 | **16.7%** | ❌ |
+| `Garcom` | 0/6 | **0%** | ❌ |
+| `ItemPedidoPK` | 0/10 | **0%** | ❌ |
+
+> **Observacao:** Os branches baixos nas entidades (`Item`, `Cardapio`, `Cliente`, `Garcom`, `ItemPedidoPK`) sao gerados pelo Hibernate/JPA (metodos `equals`/`hashCode` com comparacoes de `null`). As classes de logica de negocio relevantes (`PedidoService`, `Pedido`, `Pagamento`) atingem o criterio de >=80% de branches (todas-arestas).
+
+**Como visualizar o relatorio (HTML):**
+
+```bash
+.\mvnw.cmd clean test jacoco:report -Dmaven.test.failure.ignore=true -Dexcludes=**/e2e/**
+# Abrir: target/site/jacoco/index.html
+```
+
+### 3.2 Sugestao: exigir cobertura minima (80%) via CI/CD
+
+Para evitar regressao na qualidade dos testes (e incentivar a cobertura de branches/linhas ao longo do tempo), uma boa pratica e configurar o pipeline de CI/CD para **falhar o build** quando a cobertura ficar abaixo de um limite minimo.
+
+**Sugestao de politica (exemplo):**
+
+| Metrica | Limite minimo sugerido |
+|---|---:|
+| Linhas (line coverage) | 80% |
+| Branches (branch coverage) | 80% |
+
+**Como implementar (alto nivel):**
+
+- Adicionar o **JaCoCo** no `pom.xml` com a meta `check`, definindo os limites desejados.
+- No CI (ex.: GitHub Actions/GitLab CI), executar `mvn clean verify`.
+- Se a cobertura ficar abaixo do limite, o job falha e a PR nao pode ser mesclada ate corrigir ou justificar.
+
+> Observacao: como a metrica de *branches* costuma ser a mais dificil, um plano realista pode ser adotar 80% primeiro para **linhas** e aumentar gradualmente o limite de **branches** (por exemplo: 40% → 60% → 80%) a cada iteracao.
+
 **Cobertura de cenarios em cada classe:**
 
 | Categoria | Exemplos cobertos |
@@ -191,9 +248,171 @@ docker-compose up
 
 ---
 
+## Artefatos da Entrega 2 (17/06/2026)
 
-# Simulação de Combate
-[`Fork do repositório`](https://github.com/BielPimentaDev/Trabalho-POO-Simula-o-de-combate)
+### 5. Testes Unitarios Melhorados
+
+Novos testes adicionados cobrindo a hierarquia de Pagamento e branches antes descobertos:
+
+| Arquivo | Classe Testada | Testes | Link |
+|---|---|---|---|
+| `PagamentoTest.java` | `Pagamento`, `PagamentoComCartao`, `PagamentoComDinheiro` | 22 | [`src/test/.../Pagamento/PagamentoTest.java`](src/test/java/com/example/waiterapp/Pagamento/PagamentoTest.java) |
+| `PedidoTest.java` | `Pedido` | 16 | [`src/test/.../Pedido/PedidoTest.java`](src/test/java/com/example/waiterapp/Pedido/PedidoTest.java) |
+| `PedidoServiceTest.java` | `PedidoService` | 17 | [`src/test/.../Pedido/PedidoServiceTest.java`](src/test/java/com/example/waiterapp/Pedido/PedidoServiceTest.java) |
+| `ItemServiceTest.java` | `ItemService` | 17 | [`src/test/.../Item/ItemServiceTest.java`](src/test/java/com/example/waiterapp/Item/ItemServiceTest.java) |
+
+**Total acumulado: ~183 testes unitarios**
+
+---
+
+### 6. Testes de Integracao
+
+Testes com Spring Boot + H2 em memoria, testando a camada Controller → Service → Repository real:
+
+| Arquivo | Modulo Testado | Testes | Link |
+|---|---|---|---|
+| `ClienteIntegrationTest.java` | Cliente (CRUD + busca por CPF) | 7 | [`src/test/.../integration/ClienteIntegrationTest.java`](src/test/java/com/example/waiterapp/integration/ClienteIntegrationTest.java) |
+| `CardapioIntegrationTest.java` | Cardapio (CRUD + 404) | 7 | [`src/test/.../integration/CardapioIntegrationTest.java`](src/test/java/com/example/waiterapp/integration/CardapioIntegrationTest.java) |
+
+**Como executar (excluindo E2E):**
+
+```bash
+mvn test -Dgroups='!e2e'
+```
+
+---
+
+### 7. Testes de Sistema / E2E (Selenium)
+
+Testes de ponta a ponta com Selenium 4 + WebDriverManager. Requerem a aplicacao rodando em `localhost:8080`.
+
+| Arquivo | Cenarios | Link |
+|---|---|---|
+| `PedidoE2ETest.java` | Carregamento da app, API de pedidos, tempo de resposta | [`src/test/.../e2e/PedidoE2ETest.java`](src/test/java/com/example/waiterapp/e2e/PedidoE2ETest.java) |
+| `ClienteE2ETest.java` | API de clientes, elementos Angular, performance | [`src/test/.../e2e/ClienteE2ETest.java`](src/test/java/com/example/waiterapp/e2e/ClienteE2ETest.java) |
+| `CardapioE2ETest.java` | API de cardapios, 404, itens | [`src/test/.../e2e/CardapioE2ETest.java`](src/test/java/com/example/waiterapp/e2e/CardapioE2ETest.java) |
+| `GarcomE2ETest.java` | API de garcons, Swagger UI, performance | [`src/test/.../e2e/GarcomE2ETest.java`](src/test/java/com/example/waiterapp/e2e/GarcomE2ETest.java) |
+
+**Como executar os testes E2E:**
+
+```bash
+# 1. Subir a aplicacao
+docker-compose up -d
+
+# 2. Executar apenas os testes E2E
+mvn test -Dgroups=e2e
+```
+
+---
+
+### 8. Cobertura Estrutural (JaCoCo — Tecnica Todas-Arestas)
+
+Resultados medidos em 2026-06-14 apos todas as melhorias da Entrega 2 (208 testes; E2E contabilizados separadamente):
+
+**Totais gerais:**
+
+| Metrica | Resultado |
+|---|---:|
+| Classes | **97%** (32/33) |
+| Metodos | **79.1%** (239/302) |
+| Linhas | **78.6%** (609/775) |
+| Branches | **38.3%** (23/60) |
+
+**Classes de alta complexidade (criterio todas-arestas >= 80%):**
+
+| Classe | Branches cobertos | % Branches | Status |
+|---|---|---|---|
+| `PedidoService` | 4/4 | **100%** | ✅ |
+| `Pedido` | 5/6 | **83.3%** | ✅ |
+| `Pagamento` | 5/6 | **83.3%** | ✅ |
+
+> Os branches restantes nas entidades JPA (`equals`/`hashCode` gerados) sao de baixa relevancia para o criterio todas-arestas de logica de negocio.
+
+**Como gerar o relatorio:**
+
+```bash
+.\mvnw.cmd clean test jacoco:report -Dmaven.test.failure.ignore=true
+# Abrir: target/site/jacoco/index.html
+```
+
+---
+
+### 9. Teste de Mutacao (PITest)
+
+Ferramenta: **PITest 1.15.3** com plugin JUnit 5.
+
+| Metrica | Valor |
+|---|---|
+| Mutantes gerados | 62 |
+| Mutantes mortos | 59 (95%) |
+| Test Strength | **100%** |
+
+**Como executar:**
+
+```bash
+mvn pitest:mutationCoverage
+# Relatorio em: target/pit-reports/index.html
+```
+
+---
+
+### 10. Inspecao de Codigo (SonarCloud)
+
+> Configurar em: [sonarcloud.io](https://sonarcloud.io) — conectar ao repositorio GitHub do grupo.
+
+**Como executar a analise localmente:**
+
+```bash
+mvn sonar:sonar \
+  -Dsonar.projectKey=SEU_PROJECT_KEY \
+  -Dsonar.organization=SEU_ORG \
+  -Dsonar.host.url=https://sonarcloud.io \
+  -Dsonar.login=SEU_TOKEN
+```
+
+> Prints da analise e das correcoes por membro devem ser adicionados aqui apos execucao.
+
+---
+
+### 11. ISO 25010 — Atributos de Qualidade
+
+> Documento com medidas e justificativas para cada atributo da ISO 25010:
+>
+| Medidas de Qualidade — ISO/IEC 25010 | [`docs/medidas-iso-25010.md`](docs/medidas-iso-25010.md) |
+
+---
+
+## Estrutura do Repositorio (Entrega 2)
+
+```
+waiterapp/
+├── docs/
+│   └── plano-de-teste.md
+├── src/
+│   ├── main/java/com/example/waiterapp/      # Codigo de producao
+│   └── test/java/com/example/waiterapp/
+│       ├── Cardapio/CardapioServiceTest.java
+│       ├── Cliente/ClienteServiceTest.java
+│       ├── Garcom/GarcomServiceTest.java
+│       ├── Item/ItemServiceTest.java
+│       ├── Item/Prato/PratoTest.java
+│       ├── ItemPedido/ItemPedidoTest.java
+│       ├── Pagamento/PagamentoTest.java       # NOVO
+│       ├── Pedido/PedidoTest.java
+│       ├── Pedido/PedidoServiceTest.java
+│       ├── integration/                       # NOVO — testes de integracao
+│       │   ├── ClienteIntegrationTest.java
+│       │   └── CardapioIntegrationTest.java
+│       └── e2e/                               # NOVO — testes Selenium E2E
+│           ├── BaseSeleniumTest.java
+│           ├── PedidoE2ETest.java
+│           ├── ClienteE2ETest.java
+│           ├── CardapioE2ETest.java
+│           └── GarcomE2ETest.java
+└── pom.xml                                    # JaCoCo + PITest + Selenium configurados
+```
+
+---
 
 ## Historico
 
@@ -207,11 +426,9 @@ docker-compose up
 
 # 👥 Partição de Responsabilidades
 
-
 | Integrante | Responsabilidade | Status |
 | :--- | :--- | :---: |
 | **Gabriel Pimenta** | Testes unitários, Documentação plano de testes, Reporte de issues, Documentação do projeto  | ✅ |
-| **Guilherme Coelho** | Teste Manuais WaiterApp, Casos de teste Testlink, documentação Plano de teste | ✅ |
+| **Guilherme Coelho** | Teste Manuais WaiterApp, Testes E2E com Selenium, Casos de teste Testlink, documentação Plano de teste | ✅ |
 | **Kauan Christofaro** | Teste Manuais Simulador de combate, documentação Plano de teste, Indicação das medidas da ISO 25010 | ✅ |
 | **Rafael Langsch** |  | ✅ |
-
