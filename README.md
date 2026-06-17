@@ -370,11 +370,6 @@ mvn sonar:sonar \
   -Dsonar.login=SEU_TOKEN
 ```
 
-**Issues High encontradas e correcoes aplicadas:**
-
-| Inspecao SonarCloud — issues High | [`docs/inspecao-sonarqube.md`](docs/inspecao-sonarqube.md) |
-| --- | --- |
-
 > Prints da analise e das correcoes por membro devem ser adicionados aqui apos execucao.
 
 ---
