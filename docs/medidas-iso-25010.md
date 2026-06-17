@@ -6,7 +6,7 @@
 
 Este documento define as **medidas de qualidade** dos atributos da norma **ISO/IEC 25010** para o sistema WaiterApp, indicando **como o sistema deveria ser** (metas esperadas), e **não** como está implementado atualmente.
 
-**Contexto do sistema:** API REST de gerenciamento de pedidos em restaurante (garçons, clientes, cardápio, itens, pagamentos), com interface web Angular em `http://localhost:8080`, uso em ambiente operacional de salão e integração via HTTP/JSON.
+**Contexto do sistema:** API REST de gerenciamento de pedidos em restaurante (garçons, clientes, cardápio, itens, pagamentos), com interface web Angular em, uso em ambiente operacional de salão e integração via HTTP/JSON.
 
 ---
 
@@ -63,7 +63,7 @@ Este documento define as **medidas de qualidade** dos atributos da norma **ISO/I
 
 ## 4. Usabilidade
 
-*Aplicada à interface web do WaiterApp (`http://localhost:8080`), SPA Angular com Angular Material e Bootstrap, voltada ao **cliente do restaurante** no fluxo de identificação, consulta de cardápio, carrinho e pedidos.*
+*Aplicada à interface web do WaiterApp, SPA Angular com Angular Material e Bootstrap, voltada ao **cliente do restaurante** no fluxo de identificação, consulta de cardápio, carrinho e pedidos.*
 
 ### Interface considerada (comportamento esperado)
 
