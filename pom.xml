@@ -116,6 +116,9 @@
                 <artifactId>maven-surefire-plugin</artifactId>
                 <configuration>
                     <excludedGroups>${excluded.test.groups}</excludedGroups>
+                    <excludes>
+                        <exclude>**/e2e/**</exclude>
+                    </excludes>
                 </configuration>
             </plugin>
 
