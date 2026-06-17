@@ -201,9 +201,7 @@ docker-compose up
 |---|---|---|
 | 1.0 | 2026-04-26 | Entrega 1: testes unitarios e plano de teste |
 | 1.1 | 2026-06-12 | Medidas de qualidade ISO/IEC 25010 |
-| 1.2 | 2026-06-16 | Novos casos de teste em PedidoServiceTest (PT-15 a PT-17) |
-| 1.3 | 2026-06-16 | Novo caso de teste em ItemPedidoTest (IP-08) |
-| 1.4 | 2026-06-16 | Novos casos de teste em ClienteServiceTest (CS-01 a CS-03) |
+| 2.0 | 2026-06-17 | Entrega 2: integracao, E2E, mutacao, cobertura estrutural |
 
 ---
 
