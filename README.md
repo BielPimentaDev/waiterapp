@@ -370,6 +370,11 @@ mvn sonar:sonar \
   -Dsonar.login=SEU_TOKEN
 ```
 
+**Issues High encontradas e correcoes aplicadas:**
+
+| Inspecao SonarCloud — issues High | [`docs/inspecao-sonarqube.md`](docs/inspecao-sonarqube.md) |
+| --- | --- |
+
 > Prints da analise e das correcoes por membro devem ser adicionados aqui apos execucao.
 
 ---
@@ -431,4 +436,4 @@ waiterapp/
 | **Gabriel Pimenta** | Testes unitários, Documentação plano de testes, Reporte de issues, Documentação do projeto  | ✅ |
 | **Guilherme Coelho** | Teste Manuais WaiterApp, Testes E2E com Selenium, Casos de teste Testlink, documentação Plano de teste | ✅ |
 | **Kauan Christofaro** | Teste Manuais Simulador de combate, documentação Plano de teste, Indicação das medidas da ISO 25010 | ✅ |
-| **Rafael Langsch** |  | ✅ |
+| **Rafael Langsch** | Testes de integração, Cobertura estrutural com JaCoCo, Teste de mutação com PIT (Pedido/PedidoService), Inspeção de código SonarCloud | ✅ |
