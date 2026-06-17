@@ -1,8 +1,8 @@
 # Plano de Teste — WaiterApp
 **Disciplina:** TCC00346 – Qualidade e Teste de Software  
 **Instituição:** Universidade Federal Fluminense (UFF)  
-**Versão:** 1.0  
-**Data:** 2026-04-26  
+**Versão:** 1.1  
+**Data:** 2026-06-16  
 
 ---
 
@@ -11,6 +11,7 @@
 | Versão | Data       | Autor(es)        | Descrição                        |
 |--------|------------|------------------|----------------------------------|
 | 1.0    | 2026-04-26 | Grupo (4 alunos) | Criação inicial – Entrega 1      |
+| 1.1    | 2026-06-16 | Grupo (4 alunos) | Novos casos PT-15 a PT-17 em PedidoServiceTest |
 
 ---
 
@@ -54,6 +55,9 @@ Os componentes selecionados para teste estão listados abaixo, priorizados por c
 - Listagem de pedidos por cliente (`listaPedidosByIdCliente`)
 - Busca de pedido por ID (`retornaPedidoById`) — encontrado e não encontrado
 - Criação de pedido com cálculo de preço total (`inserePedido`)
+- Persistência dos itens do pedido via `itemPedidoRepository.saveAll` (`inserePedido`)
+- Criação de pedido com múltiplos itens e busca individual de cada item (`inserePedido`)
+- Propagação de `ObjectNotFoundException` quando item do pedido não existe (`inserePedido`)
 - Atualização de pedido (`atualizaPedido`)
 - Exclusão de pedido com tratamento de integridade referencial (`apagaPedido`)
 
@@ -190,7 +194,7 @@ mvn test jacoco:report
 | Artefato | Localização | Descrição |
 |---|---|---|
 | Testes unitários — Pedido | `src/test/.../Pedido/PedidoTest.java` | 15 testes para a entidade Pedido |
-| Testes unitários — PedidoService | `src/test/.../Pedido/PedidoServiceTest.java` | 14 testes para PedidoService |
+| Testes unitários — PedidoService | `src/test/.../Pedido/PedidoServiceTest.java` | 17 testes para PedidoService |
 | Testes unitários — ItemPedido | `src/test/.../ItemPedido/ItemPedidoTest.java` | 14 testes para ItemPedido |
 | Testes unitários — Prato | `src/test/.../Item/Prato/PratoTest.java` | 13 testes para Prato |
 | Testes unitários — ItemService | `src/test/.../Item/ItemServiceTest.java` | 15 testes para ItemService |
@@ -221,6 +225,9 @@ mvn test jacoco:report
 | PT-12 | `atualizaPedido` | Pedido existente | Happy Path | Pedido salvo e retornado |
 | PT-13 | `apagaPedido` | Pedido sem dependências | Happy Path | Excluído sem exceção |
 | PT-14 | `apagaPedido` | Violação referencial | Negative | `DataIntegrityViolationException` |
+| PT-15 | `inserePedido` | Persistir ItemPedido via `saveAll` | Happy Path | `saveAll` invocado |
+| PT-16 | `inserePedido` | Múltiplos itens (35×2 + 10×3) | Happy Path | preçoTotal=100; `retornaItemById` por item |
+| PT-17 | `inserePedido` | Item inexistente | Negative | `ObjectNotFoundException` propagada; `saveAll` não chamado |
 
 ### 10.2 Pedido (entidade)
 
