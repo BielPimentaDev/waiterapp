@@ -108,11 +108,11 @@ mvn test
 | `ItemPedidoTest.java` | `ItemPedido` | 15 | [`src/test/.../ItemPedido/ItemPedidoTest.java`](src/test/java/com/example/waiterapp/ItemPedido/ItemPedidoTest.java) |
 | `PratoTest.java` | `Prato` | 13 | [`src/test/.../Item/Prato/PratoTest.java`](src/test/java/com/example/waiterapp/Item/Prato/PratoTest.java) |
 | `ItemServiceTest.java` | `ItemService` | 15 | [`src/test/.../Item/ItemServiceTest.java`](src/test/java/com/example/waiterapp/Item/ItemServiceTest.java) |
-| `ClienteServiceTest.java` | `ClienteService` | 16 | [`src/test/.../Cliente/ClienteServiceTest.java`](src/test/java/com/example/waiterapp/Cliente/ClienteServiceTest.java) |
+| `ClienteServiceTest.java` | `ClienteService` | 19 | [`src/test/.../Cliente/ClienteServiceTest.java`](src/test/java/com/example/waiterapp/Cliente/ClienteServiceTest.java) |
 | `GarcomServiceTest.java` | `GarcomService` | 16 | [`src/test/.../Garcom/GarcomServiceTest.java`](src/test/java/com/example/waiterapp/Garcom/GarcomServiceTest.java) |
 | `CardapioServiceTest.java` | `CardapioService` | 16 | [`src/test/.../Cardapio/CardapioServiceTest.java`](src/test/java/com/example/waiterapp/Cardapio/CardapioServiceTest.java) |
 
-**Total: ~123 testes unitarios**
+**Total: ~126 testes unitarios**
 
 **Cobertura de cenarios em cada classe:**
 
@@ -203,6 +203,7 @@ docker-compose up
 | 1.1 | 2026-06-12 | Medidas de qualidade ISO/IEC 25010 |
 | 1.2 | 2026-06-16 | Novos casos de teste em PedidoServiceTest (PT-15 a PT-17) |
 | 1.3 | 2026-06-16 | Novo caso de teste em ItemPedidoTest (IP-08) |
+| 1.4 | 2026-06-16 | Novos casos de teste em ClienteServiceTest (CS-01 a CS-03) |
 
 ---
 

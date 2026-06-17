@@ -13,6 +13,7 @@
 | 1.0    | 2026-04-26 | Grupo (4 alunos) | Criação inicial – Entrega 1      |
 | 1.1    | 2026-06-16 | Grupo (4 alunos) | Novos casos PT-15 a PT-17 em PedidoServiceTest |
 | 1.2    | 2026-06-16 | Grupo (4 alunos) | Novo caso IP-08 em ItemPedidoTest |
+| 1.3    | 2026-06-16 | Grupo (4 alunos) | Novos casos CS-01 a CS-03 em ClienteServiceTest |
 
 ---
 
@@ -89,6 +90,9 @@ Os componentes selecionados para teste estão listados abaixo, priorizados por c
 - CRUD completo de clientes
 - Busca por CPF
 - Retorno de pedidos do cliente
+- `NullPointerException` em `retornaPedidosCliente` e `inserePedidosCliente` quando cliente não existe
+- `atualizaCliente` sem validação de existência do ID
+- `apagaCliente` sem verificação prévia de existência (diferente de `GarcomService`)
 - Tratamento de violação referencial na exclusão
 
 ### 3.7 GarcomService
@@ -200,7 +204,7 @@ mvn test jacoco:report
 | Testes unitários — ItemPedido | `src/test/.../ItemPedido/ItemPedidoTest.java` | 15 testes para ItemPedido |
 | Testes unitários — Prato | `src/test/.../Item/Prato/PratoTest.java` | 13 testes para Prato |
 | Testes unitários — ItemService | `src/test/.../Item/ItemServiceTest.java` | 15 testes para ItemService |
-| Testes unitários — ClienteService | `src/test/.../Cliente/ClienteServiceTest.java` | 16 testes para ClienteService |
+| Testes unitários — ClienteService | `src/test/.../Cliente/ClienteServiceTest.java` | 19 testes para ClienteService |
 | Testes unitários — GarcomService | `src/test/.../Garcom/GarcomServiceTest.java` | 16 testes para GarcomService |
 | Testes unitários — CardapioService | `src/test/.../Cardapio/CardapioServiceTest.java` | 16 testes para CardapioService |
 | Plano de Teste | `docs/plano-de-teste.md` | Este documento |
@@ -272,6 +276,14 @@ mvn test jacoco:report
 | PR-05 | `getCaloriaTotal` | Valores decimais | Edge Case | Correto com tolerância |
 | PR-06 | `getCaloriaTotal` | 10 ingredientes de 50 cal | Boundary | 500.0 |
 
+### 10.5 ClienteService
+
+| ID | Método | Cenário | Tipo | Resultado Esperado |
+|---|---|---|---|---|
+| CS-01 | `inserePedidosCliente` | Cliente inexistente | Negative | `NullPointerException` |
+| CS-02 | `atualizaCliente` | ID inexistente | Negative | Persiste mesmo assim |
+| CS-03 | `apagaCliente` | ID inexistente | Negative | `deleteById` sem verificar existência |
+
 ---
 
 ## 11. Riscos e Mitigações
@@ -282,6 +294,9 @@ mvn test jacoco:report
 | Bug em `adicionarItemExtra` (não adiciona ao Set) | Confirmado | Médio | Documentado; teste expõe o comportamento |
 | `retornaPedidoById` chama `findById` duas vezes | Confirmado | Baixo | Documentado; não afeta funcionalidade |
 | `retornaPedidosCliente` lança NPE para cliente inexistente | Confirmado | Alto | Documentado; teste verifica comportamento atual |
+| `inserePedidosCliente` lança NPE para cliente inexistente | Confirmado | Alto | Documentado; teste CS-01 verifica comportamento atual |
+| `atualizaCliente` persiste sem validar existência do ID | Confirmado | Médio | Documentado; teste CS-02 expõe o comportamento |
+| `apagaCliente` exclui sem verificar existência | Confirmado | Médio | Documentado; teste CS-03 expõe inconsistência com outros services |
 | `getSubTotal` ignora o campo `preco` de `ItemPedido` | Confirmado | Médio | Documentado; teste IP-08 expõe o comportamento |
 
 ---
@@ -292,6 +307,9 @@ mvn test jacoco:report
 |---|---|---|---|---|
 | BUG-01 | `Pedido` | `adicionarItemExtra` | Cria `ItemPedido` mas não o adiciona ao `Set<ItemPedido> items` | Médio |
 | BUG-02 | `ClienteService` | `retornaPedidosCliente` | Lança `NullPointerException` quando cliente não existe (deveria lançar `ObjectNotFoundException`) | Alto |
+| BUG-05 | `ClienteService` | `inserePedidosCliente` | Lança `NullPointerException` quando cliente não existe (deveria lançar `ObjectNotFoundException`) | Alto |
+| BUG-06 | `ClienteService` | `atualizaCliente` | Ignora retorno de `retornaClienteById` e persiste mesmo com ID inexistente | Médio |
+| BUG-07 | `ClienteService` | `apagaCliente` | Exclui sem verificar existência do cliente (inconsistente com `GarcomService`) | Médio |
 | BUG-03 | `PedidoService` | `retornaPedidoById` | Chama `findById` duas vezes para o mesmo ID (ineficiência) | Baixo |
 | BUG-04 | `ItemPedido` | `getSubTotal` | Ignora o campo `preco` armazenado e usa sempre `item.getPreco()` | Médio |
 
