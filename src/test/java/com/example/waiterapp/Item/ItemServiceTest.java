@@ -1,5 +1,7 @@
 package com.example.waiterapp.Item;
 
+import com.example.waiterapp.Cardapio.Cardapio;
+import com.example.waiterapp.ItemPedido.ItemPedido;
 import com.example.waiterapp.exceptions.ObjectNotFoundException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -13,8 +15,10 @@ import org.springframework.dao.DataIntegrityViolationException;
 import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
@@ -311,5 +315,48 @@ class ItemServiceTest {
 
         // Assert
         assertNull(resultado.getId());
+    }
+
+    @Test
+    @DisplayName("transformarDTO deve transferir a lista de cardápios do DTO para o item")
+    void transformarDTO_comCardapios_deveMappearCardapios() {
+        // Arrange
+        Cardapio cardapio = new Cardapio();
+        List<Cardapio> cardapios = List.of(cardapio);
+
+        ItemDTO dto = new ItemDTO();
+        dto.setId(1L);
+        dto.setNome("Pizza");
+        dto.setPreco(30.0);
+        dto.setCardapios(cardapios);
+
+        // Act
+        Item resultado = itemService.transformarDTO(dto);
+
+        // Assert — verifica o conteúdo, não apenas não-nulo; mata o mutante setCardapios()
+        assertEquals(1, resultado.getCardapios().size());
+        assertEquals(cardapio, resultado.getCardapios().get(0));
+    }
+
+    @Test
+    @DisplayName("transformarDTO deve transferir o conjunto de items do DTO para o item")
+    void transformarDTO_comItems_deveMappearItems() {
+        // Arrange
+        ItemPedido ip = new ItemPedido();
+        Set<ItemPedido> itensPedido = new HashSet<>();
+        itensPedido.add(ip);
+
+        ItemDTO dto = new ItemDTO();
+        dto.setId(1L);
+        dto.setNome("Pizza");
+        dto.setPreco(30.0);
+        dto.setItems(itensPedido);
+
+        // Act
+        Item resultado = itemService.transformarDTO(dto);
+
+        // Assert — verifica o conteúdo, não apenas não-nulo; mata o mutante setItems()
+        assertEquals(1, resultado.getItems().size());
+        assertTrue(resultado.getItems().contains(ip));
     }
 }
