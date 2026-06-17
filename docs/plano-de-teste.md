@@ -12,6 +12,7 @@
 |--------|------------|------------------|----------------------------------|
 | 1.0    | 2026-04-26 | Grupo (4 alunos) | Criação inicial – Entrega 1      |
 | 1.1    | 2026-06-16 | Grupo (4 alunos) | Novos casos PT-15 a PT-17 em PedidoServiceTest |
+| 1.2    | 2026-06-16 | Grupo (4 alunos) | Novo caso IP-08 em ItemPedidoTest |
 
 ---
 
@@ -69,6 +70,7 @@ Os componentes selecionados para teste estão listados abaixo, priorizados por c
 
 ### 3.3 ItemPedido (entidade)
 - Cálculo do subtotal (`getSubTotal` = quantidade × preço do item)
+- Subtotal com preço armazenado em `ItemPedido` diferente do preço do item (`getSubTotal` ignora campo `preco`)
 - Comportamento dos construtores
 - Mutação de preço e quantidade
 
@@ -195,7 +197,7 @@ mvn test jacoco:report
 |---|---|---|
 | Testes unitários — Pedido | `src/test/.../Pedido/PedidoTest.java` | 15 testes para a entidade Pedido |
 | Testes unitários — PedidoService | `src/test/.../Pedido/PedidoServiceTest.java` | 17 testes para PedidoService |
-| Testes unitários — ItemPedido | `src/test/.../ItemPedido/ItemPedidoTest.java` | 14 testes para ItemPedido |
+| Testes unitários — ItemPedido | `src/test/.../ItemPedido/ItemPedidoTest.java` | 15 testes para ItemPedido |
 | Testes unitários — Prato | `src/test/.../Item/Prato/PratoTest.java` | 13 testes para Prato |
 | Testes unitários — ItemService | `src/test/.../Item/ItemServiceTest.java` | 15 testes para ItemService |
 | Testes unitários — ClienteService | `src/test/.../Cliente/ClienteServiceTest.java` | 16 testes para ClienteService |
@@ -257,6 +259,7 @@ mvn test jacoco:report
 | IP-05 | `getSubTotal` | Preço alterado após criação | Edge Case | Usa preço atual do item |
 | IP-06 | `getSubTotal` | Preço do item = 0 | Negative | 0.0 |
 | IP-07 | `getSubTotal` | Quantidade 1000 | Boundary | 10000.0 |
+| IP-08 | `getSubTotal` | Preço armazenado ≠ preço do item | Edge Case | Usa preço do item (campo `preco` ignorado) |
 
 ### 10.4 Prato (entidade)
 
@@ -279,6 +282,7 @@ mvn test jacoco:report
 | Bug em `adicionarItemExtra` (não adiciona ao Set) | Confirmado | Médio | Documentado; teste expõe o comportamento |
 | `retornaPedidoById` chama `findById` duas vezes | Confirmado | Baixo | Documentado; não afeta funcionalidade |
 | `retornaPedidosCliente` lança NPE para cliente inexistente | Confirmado | Alto | Documentado; teste verifica comportamento atual |
+| `getSubTotal` ignora o campo `preco` de `ItemPedido` | Confirmado | Médio | Documentado; teste IP-08 expõe o comportamento |
 
 ---
 
@@ -289,6 +293,7 @@ mvn test jacoco:report
 | BUG-01 | `Pedido` | `adicionarItemExtra` | Cria `ItemPedido` mas não o adiciona ao `Set<ItemPedido> items` | Médio |
 | BUG-02 | `ClienteService` | `retornaPedidosCliente` | Lança `NullPointerException` quando cliente não existe (deveria lançar `ObjectNotFoundException`) | Alto |
 | BUG-03 | `PedidoService` | `retornaPedidoById` | Chama `findById` duas vezes para o mesmo ID (ineficiência) | Baixo |
+| BUG-04 | `ItemPedido` | `getSubTotal` | Ignora o campo `preco` armazenado e usa sempre `item.getPreco()` | Médio |
 
 ---
 
