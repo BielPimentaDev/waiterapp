@@ -1,7 +1,7 @@
 # Plano de Teste — WaiterApp
 **Disciplina:** TCC00346 – Qualidade e Teste de Software  
 **Instituição:** Universidade Federal Fluminense (UFF)  
-**Versão:** 1.1  
+**Versão:** 1.0 
 **Data:** 2026-06-16  
 
 ---
